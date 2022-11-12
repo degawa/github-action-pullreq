@@ -1,0 +1,6 @@
+name = "greeting"
+version = "0.1.0"
+license = "license"
+author = "Tomohiro Degawa"
+maintainer = "https://github.com/degawa"
+copyright = "Copyright 2022, Tomohiro Degawa"
