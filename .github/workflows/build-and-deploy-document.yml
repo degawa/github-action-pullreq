@@ -1,0 +1,48 @@
+name: Build and Deploy Document
+run-name: ${{ github.actor }} is building and deploying ${{ github.repository }} document 🚀
+
+on:
+  pull-request:
+    branches:
+      - master
+    types: [closed]
+
+jobs:
+  documentation:
+    runs-on: ubuntu-22.04
+    if: github.event.pull-request.merged == true
+
+    env:
+      FC: gfortran
+      GCC_V: 12
+      MARKDOWN_V: 3.3.4
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt install -y gfortran-${GCC_V} python3-dev graphviz
+          sudo pip install ford markdown==${MARKDOWN_V}
+
+      - name: Build Document
+        run: |
+          ford api-doc-ford-settings.md
+
+      - name: Upload Document
+        uses: actions/upload-artifact@v2
+        with:
+          name: documentation
+          path: api-doc
+          if-no-files-found: error
+
+      - name: Depoly Document
+        uses: JamesIves/github-pages-deploy-action@4.1.0
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master'}}
+        with:
+          branch: gh-pages
+          folder: api-doc
+
+      - run: echo "🍏 This job's status is ${{ job.status }}."
