@@ -2,7 +2,7 @@ name: Build and Deploy Document
 run-name: ${{ github.actor }} is building and deploying ${{ github.repository }} document 🚀
 
 on:
-  pull-request:
+  pull_request:
     branches:
       - master
     types: [closed]
@@ -10,7 +10,7 @@ on:
 jobs:
   documentation:
     runs-on: ubuntu-22.04
-    if: github.event.pull-request.merged == true
+    if: github.event.pull_request.merged == true
 
     env:
       FC: gfortran
